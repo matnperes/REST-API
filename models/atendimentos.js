@@ -1,8 +1,12 @@
-const { send } = require('express/lib/response')
+//----------------Responsável por criar os métodos que serão requisitados em cada rota-----------------------//
+
+
+//----------------------------------Chamando módulos-------------------------------------//
 const moment = require('moment')
 const conexao = require('../infraestrutura/conexao')
 
 class Atendimento{
+  //A classe atendimento tem como funcionalidade fornecer métodos para requisições HTTP de acordo com cada rota
   adiciona(atendimento, res){
     const dataCriacao = new Date()
     const data = moment(atendimento.data, 'DD-MM-YYYY').format('YYYY-MM-DD HH:mm:ss')
@@ -52,19 +56,21 @@ class Atendimento{
         }
       })
     }
-  }
+  } //POST adicionará um novo agendamento
 
-  lista(res){
+  lista(res) {
     const sql = 'SELECT * FROM Atendimentos'
 
-    conexao.query(sql, (erro, resultados) =>{
-      if(erro){
-        res.status(400).json(erro)
-      }else{
-        res.status(200).json(resultados)
-      }
+    conexao.query(sql, (erro, resultados) => {
+        if(erro) {
+            res.status(400).json(erro)
+        } else {
+            res.status(200).json(resultados)
+        }
     })
-  }
+}
+
+  // GET retornará a lista de agendamentos do PetShop
 
   buscaPorId(id, res) {
     const sql = `SELECT * FROM Atendimentos WHERE id=${id}`
@@ -79,7 +85,7 @@ class Atendimento{
         res.status(200).json(atendimento)
       }
     })
-  }
+  } // GET retornará o agendamento de acordo com o id passado na rota
 
   altera(id, valores, res){
     if(valores.data){
@@ -94,7 +100,7 @@ class Atendimento{
           res.status(200).json({...valores, id})
       }
     })
-  }
+  }// PATCH irá alterar dados de agendamentos de acordo com o id passado na rota
 
   deleta(id, res){
     const sql = 'DELETE FROM Atendimentos WHERE id=?'
@@ -106,7 +112,7 @@ class Atendimento{
         res.status(200).json({id})
       }
     })
-  }
+  }// DELETE irá deletar um agendamento de acordo com o id passado na rota
 }
 
 
