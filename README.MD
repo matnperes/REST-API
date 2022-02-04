@@ -33,7 +33,6 @@
 
 <h3><strong>MODULOS UTILIZADOS</strong></h3>
 <br>
-<p>BodyParser  = <a href='https://www.npmjs.com/package/body-parser'>Documentação.</a></p>
 
 <p>NodeMon = <a href='https://www.npmjs.com/package/nodemon'>Documentação.</a></p>
 

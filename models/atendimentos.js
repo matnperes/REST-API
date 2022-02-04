@@ -30,7 +30,6 @@ class Atendimento{
       mensagem: "No momento temos apenas serviços de banho e tosa"
     }
   ]
-    
     const mensagemDeErro = []
     const erros = validacoes.filter(erro => {
       if(!erro.valido){ 
@@ -68,14 +67,10 @@ class Atendimento{
             res.status(200).json(resultados)
         }
     })
-}
-
-  // GET retornará a lista de agendamentos do PetShop
+  } // GET retornará a lista de agendamentos do PetShop
 
   buscaPorId(id, res) {
     const sql = `SELECT * FROM Atendimentos WHERE id=${id}`
-
-    
 
     conexao.query(sql, (erro, resultados)=>{
       const atendimento = resultados[0]

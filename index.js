@@ -1,6 +1,3 @@
-
-
-
 //---------------------------------esse código index.js é responsável por subir o servidor.--------------------------------------//
 
 
@@ -21,6 +18,7 @@ conexaoBd.connect((erro)=>{
 //o metodo connect tem como argumento o erro, e abaixo notamos que só irá prosseguir com as conexões se não houver erros com a conexão do banco de dados
   if(erro){
     console.log(erro);
+  
   }else{
     console.log("**Conexão estabelecida**")
     

@@ -11,7 +11,7 @@ module.exports = app =>{
     //executa a função quando é recebido requisição do tipo POST (para enviar algo ao servidor)
   }) //POST servirá para enviar dados para o servidor (Neste caso para preencher formulário de agendamento)
 
-  app.get('/atendimento', (res) => {
+  app.get('/atendimento', (req, res) => {
     Atendimento.lista(res)
     //            rota  solicitação,resposta      retorno
     //executa a função quando é recebido requisição do tipo GET (para solicitar algo ao servidor)
