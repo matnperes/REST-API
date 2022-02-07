@@ -7,12 +7,16 @@ module.exports = app =>{
 
   app.post('/atendimento', (req, res) => {
     const atendimento = req.body
-    Atendimento.adiciona(atendimento, res)
+    Atendimento.adiciona(atendimento)
+      .then(atendimentoCadastrado => res.status(201).json(atendimentoCadastrado))
+      .catch(erros => res.status(400).json(erros))
     //executa a função quando é recebido requisição do tipo POST (para enviar algo ao servidor)
   }) //POST servirá para enviar dados para o servidor (Neste caso para preencher formulário de agendamento)
 
-  app.get('/atendimento', (req, res) => {
-    Atendimento.lista(res)
+  app.get('/atendimentos', (req, res) => {
+    Atendimento.lista()
+        .then(resultados => res.json(resultados))
+        .catch(erros => res.status(400).json(erros))
     //            rota  solicitação,resposta      retorno
     //executa a função quando é recebido requisição do tipo GET (para solicitar algo ao servidor)
   })  //GET neste caso servirá para retornar a lista de agendamento completa 

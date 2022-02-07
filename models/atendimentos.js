@@ -5,69 +5,59 @@
 const axios = require('axios')
 const moment = require('moment')
 const conexao = require('../infraestrutura/database/conexao')
-
+const repositorio = require('../repositorios/atendimento')
 class Atendimento{
+  constructor(){
+    this.dataEhValida = ({data, dataCriacao}) => moment(data).isSameOrAfter(dataCriacao)
+    this.clienteEhValido = (tamanho) => tamanho >= 4
+    this.valida = parametros =>
+      this.validacoes.filter(campo =>{
+      const {nome} = campo
+      const parametro = parametros[nome]
+
+      return !campo.valido(parametro)
+    })
+
+    
+    this.validacoes = [{
+      nome: 'data',
+      valido: this.dataEhValida,
+      mensagem: "A data deve ser maior que a data atual"
+    }, {
+      nome: 'cliente',
+      valido: this.clienteEhValido,
+      mensagem: "O nome deve ter pelo menos 5 caracteres"
+    }
+  ]
+  }
   //A classe atendimento tem como funcionalidade fornecer métodos para requisições HTTP de acordo com cada rota
   adiciona(atendimento, res){
     const dataCriacao = new Date()
     const data = moment(atendimento.data, 'DD-MM-YYYY').format('YYYY-MM-DD HH:mm:ss')
-    const dataEhValida = moment(data).isSameOrAfter(dataCriacao)
-    const clienteEhValido = atendimento.cliente.length >= 4
-    const servicoEhValido = atendimento.servico == 'banho' || atendimento.servico == 'tosa' || atendimento.servico == 'banho e tosa'
-    
-    
-    const validacoes = [{
-      nome: 'data',
-      valido: dataEhValida,
-      mensagem: "A data deve ser maior que a data atual"
-    }, {
-      nome: 'nome',
-      valido: clienteEhValido,
-      mensagem: "O nome deve ter pelo menos 5 caracteres"
-    }, 
-    {
-      nome: 'servico',
-      valido: servicoEhValido,
-      mensagem: "No momento temos apenas serviços de banho e tosa"
+
+    const parametros = {
+      data: {data, dataCriacao},
+      cliente: {tamanho: atendimento.cliente.length}
     }
-  ]
-    const mensagemDeErro = []
-    const erros = validacoes.filter(erro => {
-      if(!erro.valido){ 
-        mensagemDeErro.push(erro.mensagem)
-        return erro
-        }
-      })
-      
+
+    const erros = this.valida(parametros)
     const existemErros = erros.length
 
     if(existemErros){
-      res.status(400).json(mensagemDeErro)
+      return new Promise((resolve, reject) => reject(erros))
     }else{
       const atendimentoDatado ={...atendimento, dataCriacao, data}
 
-      const sql = 'INSERT INTO Atendimentos SET ?'
-      
-      conexao.query(sql, atendimentoDatado, (erro, resultados) =>{
-        if (erro){
-          res.status(400).json(erro)
-        } else{
-          res.status(201).json(atendimento)
-        }
-      })
+      return repositorio.adiciona(atendimentoDatado)
+        .then((resultados)=>{
+          const id = resultados.insertId
+          return ({...atendimento, id})
+        })
     }
   } //POST adicionará um novo agendamento
 
-  lista(res) {
-    const sql = 'SELECT * FROM Atendimentos'
-
-    conexao.query(sql, (erro, resultados) => {
-        if(erro) {
-            res.status(400).json(erro)
-        } else {
-            res.status(200).json(resultados)
-        }
-    })
+  lista() {
+    return repositorio.lista()
   } // GET retornará a lista de agendamentos do PetShop
 
   buscaPorId(id, res) {
