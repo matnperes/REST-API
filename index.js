@@ -7,9 +7,9 @@
 
 const customExpress = require('./config/customExpress')
 //Importa express customizado.
-const conexaoBd = require('./infraestrutura/conexao')
+const conexaoBd = require('./infraestrutura/database/conexao')
 //Importa a conexao com o BD
-const Tabelas = require('./infraestrutura/tabelas')
+const Tabelas = require('./infraestrutura/database/tabelas')
 //Importa o script de criação de tabelas
 
 //-------------------------------Estabelecendo conexões-------------------------------------//

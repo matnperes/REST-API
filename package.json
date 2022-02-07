@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/matnperes/REST-API#readme",
   "dependencies": {
+    "axios": "^0.25.0",
     "consign": "^0.1.6",
     "express": "^4.17.2",
     "moment": "^2.29.1",
